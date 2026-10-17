@@ -107,7 +107,7 @@ function App() {
       { threshold: 0.2, rootMargin: '0px 0px -8% 0px' },
     )
 
-    const revealTargets = document.querySelectorAll('.reveal-item, .project-card, .contact-card')
+    const revealTargets = document.querySelectorAll('.reveal, .reveal-item, .project-card, .contact-card')
     revealTargets.forEach((element) => revealObserver.observe(element))
 
     return () => revealObserver.disconnect()
