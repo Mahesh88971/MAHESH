@@ -59,8 +59,8 @@ const contactLinks = [
   {
     icon: '@',
     label: 'Email',
-    value: 'lucky9595812@gmail.com',
-    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=lucky9595812@gmail.com&su=Project%20idea%20for%20Mahesh%20Babu%20Sanka&body=Hi%20Mahesh%2C%0A%0AI%20would%20like%20to%20discuss%20an%20idea%20with%20you.%0A%0A',
+    value: 'lucky90595812@gmail.com',
+    href: 'https://mail.google.com/mail/?view=cm&fs=1&to=lucky90595812@gmail.com&su=Project%20idea%20for%20Mahesh%20Babu%20Sanka&body=Hi%20Mahesh%2C%0A%0AI%20would%20like%20to%20discuss%20an%20idea%20with%20you.%0A%0A',
   },
   { icon: 'in', label: 'LinkedIn', value: 'mahesh-babu-sanka', href: 'https://linkedin.com/in/mahesh-babu-sanka' },
   { icon: '⌘', label: 'GitHub', value: 'Mahesh88971', href: 'https://github.com/Mahesh88971' },
@@ -72,6 +72,33 @@ function App() {
   const [introVisible, setIntroVisible] = useState(true)
   const [introLeaving, setIntroLeaving] = useState(false)
   const [loadProgress, setLoadProgress] = useState(1)
+  const [contactStatus, setContactStatus] = useState('')
+
+  async function handleContactSubmit(event) {
+    event.preventDefault()
+    setContactStatus('Sending your message…')
+
+    const formElement = event.currentTarget
+    const message = Object.fromEntries(new FormData(formElement).entries())
+
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/lucky90595812@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(message),
+      })
+
+      if (!response.ok) throw new Error('Message could not be sent')
+
+      setContactStatus('Thanks! Your message has been sent.')
+      formElement.reset()
+    } catch {
+      setContactStatus('Sorry, your message could not be sent. Please email me directly.')
+    }
+  }
 
   useEffect(() => {
     let progress = 1
@@ -352,6 +379,27 @@ function App() {
               </a>
             ))}
           </div>
+
+          <form className="contact-form reveal-item" onSubmit={handleContactSubmit}>
+            <h3>Send me a message</h3>
+            <p>I&apos;ll get back to you as soon as I can.</p>
+            <div className="contact-form-fields">
+              <label>
+                Your name
+                <input name="name" type="text" autoComplete="name" placeholder="Jane Doe" required />
+              </label>
+              <label>
+                Email address
+                <input name="email" type="email" autoComplete="email" placeholder="you@example.com" required />
+              </label>
+              <label className="contact-message-field">
+                Message
+                <textarea name="message" rows="5" placeholder="Tell me a little about what you have in mind…" required />
+              </label>
+            </div>
+            <button className="contact-submit" type="submit">Send message <span aria-hidden="true">↗</span></button>
+            <p className="contact-status" role="status" aria-live="polite">{contactStatus}</p>
+          </form>
         </section>
       </main>
 
